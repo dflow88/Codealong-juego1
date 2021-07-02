@@ -20,13 +20,14 @@ const myGameArea = {
 
 class Component {
     constructor(width, height, color, x, y){
+        this.speedX = 0
+        this.speedY = 0
         this.width = width
         this.height = height
         this.color = color
         this.x = x
         this.y = y
-        this.speedX = 0
-        this.speedY = 0
+
     }
 
     update() {
@@ -52,7 +53,8 @@ class Component {
     }
 
     newPos(){
-
+        this.x += this.speedX
+        this.y += this.speedY
     }
 
     crashWith(){
@@ -63,8 +65,8 @@ class Component {
 
 // MOTOR DEL JUEGO
 function updateGameArea() {
-    console.log("hola")
     myGameArea.clear()
+    player.newPos()
     player.update()
 }
 
@@ -93,12 +95,11 @@ document.addEventListener("keydown",(e) => {
         default:
             return
     }
-    console.log(player)
 })
 
 document.addEventListener("keyup", () => {
 
     player.speedX = 0
     player.speedY = 0
-    console.log("freno", player)
+    
 })
