@@ -15,7 +15,10 @@ const myGameArea = {
             },
     clear: function () {
                 this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
-            }
+            },
+    stop: function () {
+        clearInterval(this.interval)
+    }
 }
 
 class Component {
@@ -37,19 +40,19 @@ class Component {
     }
 
     left(){
-
+        return this.x
     }
 
     right(){
-
+        return this.x + this.width
     }
 
     top(){
-
+        return this.y 
     }
 
     bottom(){
-
+        return this.y + this.height
     }
 
     newPos(){
@@ -57,8 +60,13 @@ class Component {
         this.y += this.speedY
     }
 
-    crashWith(){
-
+    crashWith(obstacle){
+        return !(
+            this.bottom() < obstacle.top() ||
+            this.top() > obstacle.bottom() ||
+            this.right() < obstacle.left() ||
+            this.left() > obstacle.right()
+        )
     }
 
 }
@@ -68,12 +76,48 @@ function updateGameArea() {
     myGameArea.clear()
     player.newPos()
     player.update()
+    updateObstacles()
+    checkGameOver()
+}
+
+function updateObstacles() {
+    for(i=0;i<myObstacles.length;i++) {
+        myObstacles[i].x += -1
+        // DIBUJAR DE NUEVO
+        myObstacles[i].update()
+    }
+    myGameArea.frames += 1
+    if(myGameArea.frames%120 === 0){
+        let canvasWidth = myGameArea.canvas.width
+        let canvasHeight = myGameArea.canvas.height
+        let minHeight = 20
+        let maxHeight = 100
+        let minGap = 60
+        let maxGap = 100
+        let height = Math.floor(Math.random()* (maxHeight - minHeight + 1) + minHeight)
+        let gap = Math.floor(Math.random()* (maxGap - minGap + 1) + minGap)
+        // GENERACION DE OBSTACULOS
+        myObstacles.push(new Component(10, height, "green", canvasWidth-50, 0))
+        myObstacles.push(new Component(10, canvasHeight - height - gap, "green", canvasWidth, height +gap))
+    }
+}
+
+
+function checkGameOver() {
+    
+    const crashed = myObstacles.some((obstacle) => {
+        return player.crashWith(obstacle)
+    })
+    if (crashed) {
+        myGameArea.stop()
+        console.log("pum")
+    }
 }
 
 //EVENTOS
 const player = new Component(30, 30, "blue", 0, 110)
 
-
+const myObstacles = []
 
 myGameArea.start()
 
