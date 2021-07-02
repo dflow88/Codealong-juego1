@@ -35,7 +35,29 @@ class Component {
         ctx.fillRect(this.x, this.y, this.width, this.height)
     }
 
+    left(){
 
+    }
+
+    right(){
+
+    }
+
+    top(){
+
+    }
+
+    bottom(){
+
+    }
+
+    newPos(){
+
+    }
+
+    crashWith(){
+
+    }
 
 }
 
@@ -52,3 +74,31 @@ const player = new Component(30, 30, "blue", 0, 110)
 
 
 myGameArea.start()
+
+document.addEventListener("keydown",(e) => {
+
+    switch(e.keyCode) {
+        case 37:
+            player.speedX -= 1
+            break;
+        case 39:
+            player.speedX += 1
+            break;
+        case 38:
+            player.speedY -=1
+            break;
+        case 40:
+            player.speedY +=1
+            break;
+        default:
+            return
+    }
+    console.log(player)
+})
+
+document.addEventListener("keyup", () => {
+
+    player.speedX = 0
+    player.speedY = 0
+    console.log("freno", player)
+})
